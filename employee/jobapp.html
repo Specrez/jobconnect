@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobConnect | Candidate Dashboard</title>
+    <link href="employee.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="#" class="brand-logo">
+                    <span class="icon">💼</span>
+                    <span>JobConnect</span>
+                </a>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="customerhome.html" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">My Jobs</a>
+                <a href="#" class="nav-link">Applications</a>
+                <a href="#" class="nav-link">Messages</a>
+            </nav>
+            
+            <div class="user-actions">
+                <button class="icon-button notification-badge">
+                    <span>🔔</span>
+                    <span class="badge">3</span>
+                </button>
+                
+                <button class="icon-button">
+                    <span>🔖</span>
+                </button>
+                
+                <div class="user-profile">
+                    <div class="profile-avatar">JD</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">Find Your Dream Employee</h1>
+        <p class="page-subtitle">Fill the form given below to post your job</p>
+        
+        <form>
+            <div class="form-group">
+                <label>Job Title</label>
+                <input type="text" name="job-title" required>
+            </div>
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" name="company-name" required>
+            </div>
+            <div class="form-group">
+                <label>Job Category</label>
+                <select name="job-category" required>
+                    <option value="">Select Category</option>
+                    <option value="legal">Legal & Government</option>
+                    <option value="it">IT</option>
+                    <option value="health">Health</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Job Location</label>
+                <input type="text" name="job-location" required>
+            </div>
+            <div class="form-group">
+                <label>Job Description</label>
+                <textarea name="job-description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Job Requirements</label>
+                <textarea name="job-requirements" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Salary Range</label>
+                <input type="text" name="salary-range">
+            </div>
+            <div class="form-group">
+                <label>Application Deadline</label>
+                <input type="date" name="application-deadline" required>
+            </div>
+            <button type="submit" class="submit-btn">Post Job</button>
+        </form>
+    </div>
+</body>
+</html>
