@@ -1,3 +1,23 @@
+<?php
+$con = new mysqli("localhost", "root", "", "jobconnect");
+
+if (isset($_POST['submit'])) {
+    $job_role = $_POST['job_role'];
+    $location = $_POST['location'];
+    $phone = $_POST['phone'];
+    $salary = $_POST['salary'];
+    $requirements = $_POST['requirements'];
+    $description = $_POST['description'];
+    $deadline = $_POST['deadline'];
+
+    // Insert the data into the database (Fixed table name syntax)
+    $sql = "INSERT INTO job (job_role, location, phone, salary, requirements, description, deadline) 
+            VALUES ('$job_role', '$location', '$phone', '$salary', '$requirements', '$description', '$deadline')";
+    
+    $result = mysqli_query($con, $sql);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,45 +65,36 @@
         <h1 class="page-title">Find Your Dream Employee</h1>
         <p class="page-subtitle">Fill the form given below to post your job</p>
         
-        <form>
+        <form method="post"> <!-- Fixed: Added method="post" -->
             <div class="form-group">
-                <label>Job Title</label>
-                <input type="text" name="job-title" required>
+                <label>Job Role</label>
+                <input type="text" name="job_role" required>
             </div>
             <div class="form-group">
-                <label>Company Name</label>
-                <input type="text" name="company-name" required>
+                <label>Location</label>
+                <input type="text" name="location" required>
             </div>
             <div class="form-group">
-                <label>Job Category</label>
-                <select name="job-category" required>
-                    <option value="">Select Category</option>
-                    <option value="legal">Legal & Government</option>
-                    <option value="it">IT</option>
-                    <option value="health">Health</option>
-                </select>
+                <label>Phone Number</label>
+                <input type="text" name="phone" required>
             </div>
             <div class="form-group">
-                <label>Job Location</label>
-                <input type="text" name="job-location" required>
-            </div>
-            <div class="form-group">
-                <label>Job Description</label>
-                <textarea name="job-description" rows="4" required></textarea>
+                <label>Salary</label>
+                <input type="text" name="salary" required>
             </div>
             <div class="form-group">
                 <label>Job Requirements</label>
-                <textarea name="job-requirements" rows="4" required></textarea>
+                <textarea name="requirements" rows="4" required></textarea>
             </div>
             <div class="form-group">
-                <label>Salary Range</label>
-                <input type="text" name="salary-range">
+                <label>Job Description</label>
+                <textarea name="description" rows="4" required></textarea>
             </div>
             <div class="form-group">
                 <label>Application Deadline</label>
-                <input type="date" name="application-deadline" required>
+                <input type="date" name="deadline" required>
             </div>
-            <button type="submit" class="submit-btn">Post Job</button>
+            <button type="submit" name="submit" class="submit-btn">Post Job</button> <!-- Fixed: Added name="submit" -->
         </form>
     </div>
 </body>

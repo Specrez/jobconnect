@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobConnect | Ca<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>JobConnect | Apply for Job</title>
+            <link rel="stylesheet" href="uploadcv.css">
+        </head>
+        <body>
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="header-container">
+                    <div class="logo-container">
+                        <a href="#" class="brand-logo">
+                            <div class="icon">💼</div>
+                            <span>JobConnect</span>
+                        </a>
+                    </div>
+                    
+                    <nav class="nav-links">
+                        <a href="#" class="nav-link">Dashboard</a>
+                        <a href="#" class="nav-link">Browse Jobs</a>
+                        <a href="#" class="nav-link active">Apply</a>
+                        <a href="#" class="nav-link">My Applications</a>
+                    </nav>
+                    
+                    <div class="user-actions">
+                        <button class="icon-button notification-badge">
+                            <span>🔔</span>
+                            <span class="badge">2</span>
+                        </button>
+                        
+                        <button class="icon-button">
+                            <span>🔖</span>
+                        </button>
+                        
+                        <div class="user-profile">
+                            <div class="profile-avatar">JS</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        
+            <div class="container">
+                <!-- Job Information Card -->
+                <div class="job-info-card">
+                    <div class="job-header">
+                        <div class="job-title-container">
+                            <h1 class="job-title">Software Engineer</h1>
+                            <h2 class="company-name">ABC Tech Solutions</h2>
+                            
+                            <div class="job-meta">
+                                <div class="job-meta-item">
+                                    <span class="job-meta-icon">📍</span>
+                                    <span>Colombo, Sri Lanka</span>
+                                </div>
+                                <div class="job-meta-item">
+                                    <span class="job-meta-icon">💰</span>
+                                    <span>LKR 150,000/month</span>
+                                </div>
+                                <div class="job-meta-item">
+                                    <span class="job-meta-icon">⏱️</span>
+                                    <span>Full-time</span>
+                                </div>
+                                <div class="job-meta-item">
+                                    <span class="job-meta-icon">📅</span>
+                                    <span>Deadline: April 15, 2025</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="job-description">
+                        <p>We are looking for a talented Software Engineer to join our dynamic development team in Colombo. You will be responsible for developing and maintaining web applications, collaborating with cross-functional teams, and contributing to the full software development lifecycle. This is a full-time position with opportunities for growth and advancement.</p>
+                    </div>
+                </div>
+                
+                <!-- Application Form -->
+                <div class="application-form-container">
+                    <h2 class="form-title">Submit Your Application</h2>
+                    
+                    <form id="jobApplicationForm" action="#" method="post" enctype="multipart/form-data">
+                        <!-- Personal Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">Personal Information</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label required">First Name</label>
+                                    <input type="text" id="firstName" name="firstName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label required">Last Name</label>
+                                    <input type="text" id="lastName" name="lastName" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email" class="form-label required">Email Address</label>
+                                    <input type="email" id="email" name="email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="form-label required">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address" class="form-label">Current Address</label>
+                                <input type="text" id="address" name="address" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <!-- Professional Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">Professional Information</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="currentCompany" class="form-label">Current Company</label>
+                                    <input type="text" id="currentCompany" name="currentCompany" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="currentPosition" class="form-label">Current Position</label>
+                                    <input type="text" id="currentPosition" name="currentPosition" class="form-control">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="yearsOfExperience" class="form-label required">Years of Experience</label>
+                                    <input type="number" id="yearsOfExperience" name="yearsOfExperience" min="0" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="expectedSalary" class="form-label">Expected Salary (LKR)</label>
+                                    <input type="text" id="expectedSalary" name="expectedSalary" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Resume Upload Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">Upload Documents</h3>
+                            
+                            <div class="form-group">
+                                <label for="resume" class="form-label required">Resume/CV</label>
+                                <div class="file-input-container">
+                                    <label for="resume" class="file-input-label">
+                                        <span class="file-input-icon">📄</span>
+                                        <span>Choose file or drag and drop</span>
+                                    </label>
+                                    <input type="file" id="resume" name="resume" class="file-input" accept=".pdf,.doc,.docx" required>
+                                </div>
+                                <div class="file-name" id="resumeFileName">No file selected</div>
+                                <p class="form-note">Accepted formats: PDF, DOC, DOCX. Maximum size: 5MB</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="coverLetter" class="form-label">Cover Letter (Optional)</label>
+                                <div class="file-input-container">
+                                    <label for="coverLetter" class="file-input-label">
+                                        <span class="file-input-icon">📝</span>
+                                        <span>Choose file or drag and drop</span>
+                                    </label>
+                                    <input type="file" id="coverLetter" name="coverLetter" class="file-input" accept=".pdf,.doc,.docx">
+                                </div>
+                                <div class="file-name" id="coverLetterFileName">No file selected</div>
+                                <p class="form-note">Accepted formats: PDF, DOC, DOCX. Maximum size: 3MB</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Additional Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">Additional Information</h3>
+                            
+                            <div class="form-group">
+                                <label for="skills" class="form-label required">Key Skills</label>
+                                <textarea id="skills" name="skills" class="form-control" placeholder="List your relevant skills separated by commas" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="whyApplying" class="form-label required">Why are you interested in this position?</label>
+                                <textarea id="whyApplying" name="whyApplying" class="form-control" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="additionalInfo" class="form-label">Any additional information you'd like to share</label>
+                                <textarea id="additionalInfo" name="additionalInfo" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Consent Section -->
+                        <div class="form-section">
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" name="termsConsent" required>
+                                    <span>I agree to the Terms and Conditions and Privacy Policy of JobConnect</span>
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" name="dataConsent" required>
+                                    <span>I consent to JobConnect storing my application data and sharing it with ABC Tech Solutions for this job application</span>
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" name="marketingConsent">
+                                    <span>I'd like to receive job alerts and other marketing communications from JobConnect (Optional)</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-secondary" onclick="window.history.back()">Back to Jobs</button>
+                            <button type="submit" class="btn btn-primary">Submit Application</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <script>
+                // Simple script to display selected file names
+                document.getElementById('resume').addEventListener('change', function(e) {
+                    const fileName = e.target.files[0] ? e.target.files[0].name : 'No file selected';
+                    document.getElementById('resumeFileName').textContent = fileName;
+                });
+                
+                document.getElementById('coverLetter').addEventListener('change', function(e) {
+                    const fileName = e.target.files[0] ? e.target.files[0].name : 'No file selected';
+                    document.getElementById('coverLetterFileName').textContent = fileName;
+                });
+            </script>
+        </body>
+        </html>
