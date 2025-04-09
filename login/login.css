@@ -1,247 +1,283 @@
-        /* Simple CSS Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        
-        body {
-            background-color: #f0f2f5;
-            color: #333;
-        }
-        
-        /* Main container */
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        /* Left side - Branding */
-        .branding {
-            flex: 1;
-            background-color: #3366ff;
-            color: white;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .logo {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        .tagline {
-            font-size: 28px;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-        
-        .description {
-            font-size: 16px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .feature-list {
-            margin-top: 30px;
-        }
-        
-        .feature {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .feature-icon {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-        
-        /* Right side - Login */
-        .login-area {
-            flex: 1;
-            background-color: white;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .login-container {
-            width: 100%;
-            max-width: 500px;
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .login-title {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .login-subtitle {
-            color: #666;
-        }
-        
-        /* Role selection */
-        #roleSelection {
-            margin-bottom: 20px;
-        }
-        
-        .role-options {
-            display: flex;
-            gap: 15px;
-            margin: 30px 0;
-        }
-        
-        .role-card {
-            flex: 1;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .role-card:hover {
-            border-color: #3366ff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .role-icon {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-        
-        .role-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .role-desc {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        /* Login form */
-        #loginForm {
-            display: none;
-        }
-        
-        .role-badge {
-            display: inline-block;
-            background-color: #f0f2f5;
-            padding: 8px 15px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: #3366ff;
-        }
-        
-        .forgot-link {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-        
-        .forgot-link a {
-            color: #3366ff;
-            text-decoration: none;
-        }
-        
-        .login-button {
-            background-color: #3366ff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 12px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .login-button:hover {
-            background-color: #2952cc;
-        }
-        
-        .back-button {
-            background: none;
-            border: none;
-            color: #666;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        
-        /* Signup section */
-        .signup-section {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        
-        .signup-text {
-            margin-bottom: 15px;
-            color: #666;
-        }
-        
-        .signup-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .signup-button:hover {
-            background-color: #3e8e41;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .branding {
-                padding: 30px;
-            }
-            
-            .role-options {
-                flex-direction: column;
-            }
-        }
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f5ff;
+    color: #333;
+}
+
+/* Container layout */
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Banner styles */
+.banner {
+    flex: 1;
+    background-color: #3366ff;
+    color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Logo and text styles */
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.tagline {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    line-height: 1.3;
+}
+
+.description {
+    font-size: 18px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+/* Features section */
+.features {
+    margin-top: 40px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.feature-icon {
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 20px;
+}
+
+/* Login area styles */
+.login-area {
+    flex: 1;
+    background-color: white;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.login-subtitle {
+    color: #666;
+}
+
+/* Form styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3366ff;
+}
+
+/* Button and link styles */
+.login-button {
+    background-color: #3366ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #2952cc;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.forgot-password a {
+    color: #3366ff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+.signup-link a {
+    color: #3366ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Message styles */
+.error-message {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.success-message {
+    background-color: #e6ffe6;
+    color: #006600;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Role selection styles */
+.role-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.role-option {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.role-option:hover {
+    border-color: #3366ff;
+    transform: translateY(-5px);
+}
+
+.role-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.role-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.role-desc {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Login form styles */
+.login-form {
+    display: none;
+}
+
+.selected-role {
+    background-color: #f0f5ff;
+    color: #3366ff;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.selected-role span {
+    margin-right: 8px;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #666;
+    margin-top: 20px;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.back-arrow {
+    margin-right: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .banner, .login-area {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .tagline {
+        font-size: 28px;
+    }
+    
+    .feature {
+        font-size: 14px;
+    }
+}

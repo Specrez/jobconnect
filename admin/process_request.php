@@ -15,12 +15,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insert into the field table
         $query = "INSERT INTO field (field_name) VALUES ('$field_name')";
         if ($conn->query($query) === TRUE) {
+            // Update the status in the field_req table
+            $update_query = "UPDATE field_req SET status = 'approved' WHERE field_id = $request_id";
+            $conn->query($update_query);
             echo "Field request approved and added to the system.";
         } else {
             echo "Error: " . $conn->error;
         }
     } elseif ($action === 'reject' && $request_id) {
-        echo "Field request rejected.";
+        // Update the status in the field_req table
+        $update_query = "UPDATE field_req SET status = 'rejected' WHERE field_id = $request_id";
+        if ($conn->query($update_query) === TRUE) {
+            echo "Field request rejected.";
+        } else {
+            echo "Error: " . $conn->error;
+        }
     } else {
         echo "Invalid action or missing parameters.";
     }

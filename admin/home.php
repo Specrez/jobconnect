@@ -36,16 +36,20 @@
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
+                        $status = $row['status'];
                         echo "<tr>
                             <td>{$row['field_id']}</td>
                             <td>{$row['company']}</td>
                             <td>{$row['field_name']}</td>
                             <td>{$row['date']}</td>
-                            <td><span class='pending'>Pending</span></td>
+                            <td><span class='" . strtolower($status) . "'>" . ucfirst($status) . "</span></td>
                             <td>
-                                <button class='btn btn-approve' onclick=\"approveRequest({$row['field_id']}, '{$row['field_name']}')\">Approve</button>
-                                <button class='btn btn-reject' onclick=\"rejectRequest({$row['field_id']})\">Reject</button>
-                            </td>
+                                <button class='btn btn-view' onclick=\"viewRequest('{$row['field_name']}', '{$row['description']}')\">View</button>";
+                        if ($status === 'pending') {
+                            echo "<button class='btn btn-approve' onclick=\"approveRequest({$row['field_id']}, '{$row['field_name']}')\">Approve</button>
+                                  <button class='btn btn-reject' onclick=\"rejectRequest({$row['field_id']})\">Reject</button>";
+                        }
+                        echo "</td>
                         </tr>";
                     }
                 } else {
@@ -64,32 +68,14 @@
             <span class="close" onclick="closeModal('viewModal')">&times;</span>
             <h2>Request Details</h2>
             <div class="form-group">
-                <label>Request ID:</label>
-                <div>REQ-001</div>
-            </div>
-            <div class="form-group">
-                <label>Employee:</label>
-                <div>John Smith</div>
-            </div>
-            <div class="form-group">
                 <label>Field Name:</label>
-                <div>Tax Exemption Status</div>
+                <div id="viewFieldName"></div>
             </div>
             <div class="form-group">
-                <label>Field Type:</label>
-                <div>Dropdown</div>
-            </div>
-            <div class="form-group">
-                <label>Field Options:</label>
-                <div>Exempt, Non-Exempt, Partially Exempt</div>
-            </div>
-            <div class="form-group">
-                <label>Justification:</label>
-                <div>Need to track tax exemption status for clients to properly calculate invoices.</div>
+                <label>Description:</label>
+                <div id="viewDescription"></div>
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-approve" onclick="closeModal('viewModal'); openModal('approveModal')">Approve</button>
-                <button class="btn btn-reject" onclick="closeModal('viewModal'); openModal('rejectModal')">Reject</button>
                 <button class="btn btn-view" onclick="closeModal('viewModal')">Close</button>
             </div>
         </div>
@@ -151,6 +137,12 @@
     </div>
     
     <script>
+        function viewRequest(fieldName, description) {
+            document.getElementById('viewFieldName').innerText = fieldName;
+            document.getElementById('viewDescription').innerText = description;
+            openModal('viewModal');
+        }
+
         function openModal(modalId) {
             document.getElementById(modalId).style.display = "block";
         }

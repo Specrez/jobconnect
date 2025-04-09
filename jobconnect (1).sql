@@ -255,6 +255,9 @@ CREATE TABLE `field_req` (
   FOREIGN KEY (`company`, `branch`, `reg_no`) REFERENCES `company` (`name`, `branch`, `reg_no`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+ALTER TABLE `field_req`
+ADD COLUMN `status` ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending';
+
 --
 -- Indexes for dumped tables
 --

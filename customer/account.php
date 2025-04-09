@@ -10,31 +10,24 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-// Include the database connection
 require_once "../connect.php";
+$email = $_SESSION['email'];
+$query = "SELECT * FROM `user` WHERE email = '$email'";
+$result = mysqli_query($con, $query);
 
-// Get the field ID from the URL safely
-$field_id = isset($_GET['field_id']) ? intval($_GET['field_id']) : 0;
-
-// Fetch the field name based on field_id
-$field_query = "SELECT field_name FROM field WHERE field_id = $field_id";
-$field_result = $con->query($field_query);
-
-$field_name = ($field_result && $field_result->num_rows > 0) ? $field_result->fetch_assoc()['field_name'] : 'Unknown Field';
-
-// Fetch jobs related to the selected field
-$jobs_query = "SELECT j.job_id, j.job_role, j.location, j.salary, j.company_name 
-               FROM job j
-               WHERE j.job_field = $field_id";
-$jobs_result = $con->query($jobs_query);
+if ($result && mysqli_num_rows($result) === 1) {
+    $user = mysqli_fetch_assoc($result);
+} else {
+    echo "Error fetching user details.";
+    exit();
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobConnect | Field Jobs</title>
+    <title>JobConnect | My Profile</title>
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
@@ -48,9 +41,9 @@ $jobs_result = $con->query($jobs_query);
             </div>
             <nav class="nav-links">
                 <a href="customerhome.php" class="nav-link">Home</a>
-                <a href="#" class="nav-link active">Browse Jobs</a>
+                <a href="#" class="nav-link">Browse Jobs</a>
                 <a href="#" class="nav-link">My Applications</a>
-                <a href="account.php" class="nav-link">Profile</a>
+                <a href="account.php" class="nav-link active">Profile</a>
             </nav>
             <div class="user-actions">
                 <button class="icon-button notification-badge">
@@ -70,38 +63,43 @@ $jobs_result = $con->query($jobs_query);
         </div>
     </header>
 
-    <main class="main-content">
-        <div class="page-header-content">
-            <h1 class="page-title"><?php echo htmlspecialchars($field_name); ?></h1>
-        </div>
-
-        <section>
-            <div class="job-grid-container">
-                <div class="job-grid">
-                    <?php if ($jobs_result && $jobs_result->num_rows > 0) { 
-                        while ($job = $jobs_result->fetch_assoc()) { ?>
-                            <a href="job.php?job_id=<?php echo $job['job_id']; ?>" class="job-card-link">
-                                <div class="job-card">
-                                    <div class="job-card-content">
-                                        <p><strong>Company:</strong> <?php echo htmlspecialchars($job['company_name']); ?></p>
-                                        <p><strong>Position:</strong> <?php echo htmlspecialchars($job['job_role']); ?></p>
-                                        <p><strong>Location:</strong> 📍 <?php echo htmlspecialchars($job['location']); ?></p>
-                                        <p><strong>Salary:</strong> 💰 LKR <?php echo number_format($job['salary'], 2); ?>/month</p>
-                                    </div>
-                                </div>
-                            </a>
-                        <?php } 
-                    } else { ?>
-                        <div class="job-card">
-                            <div class="job-card-placeholder">
-                                <span>No jobs available for this field.</span>
-                            </div>
-                        </div>
-                    <?php } ?>
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="user-id">ID: <?php echo $user['userid']; ?></div>
+                <div class="profile-pic"><?php echo strtoupper(substr($user['full_name'], 0, 2)); ?></div>
+                <h1><?php echo $user['full_name']; ?></h1>
+                <p><?php echo $user['email']; ?></p>
+            </div>
+            
+            <div class="profile-body">
+                <div class="detail-group">
+                    <div class="detail-label">Full Name</div>
+                    <div class="detail-value"><?php echo $user['full_name']; ?></div>
+                </div>
+                
+                <div class="detail-group">
+                    <div class="detail-label">Email Address</div>
+                    <div class="detail-value"><?php echo $user['email']; ?></div>
+                </div>
+                
+                <div class="detail-group">
+                    <div class="detail-label">Address</div>
+                    <div class="detail-value"><?php echo $user['address']; ?></div>
+                </div>
+                
+                <div class="detail-group">
+                    <div class="detail-label">Phone Number</div>
+                    <div class="detail-value"><?php echo $user['phone_number']; ?></div>
                 </div>
             </div>
-        </section>
-    </main>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary">Change Password</button>
+                <button class="btn btn-primary">Edit Profile</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         function confirmLogout() {
@@ -124,7 +122,3 @@ $jobs_result = $con->query($jobs_query);
     </script>
 </body>
 </html>
-
-<?php
-$con->close();
-?>

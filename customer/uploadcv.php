@@ -1,4 +1,15 @@
 <?php
+session_start();
+if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'user') {
+    header("Location: ../login/login.php");
+    exit();
+}
+
+// Disable caching
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 // Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -24,8 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $additionalInfo = $_POST["additionalInfo"];
 
     // Validate job_id
-    $jobCheckQuery = "SELECT job_id FROM job WHERE job_id = $jobId";
-    $jobCheckResult = $con->query($jobCheckQuery);
+    $jobCheckQuery = $con->prepare("SELECT job_id FROM job WHERE job_id = ?");
+    $jobCheckQuery->bind_param("i", $jobId);
+    $jobCheckQuery->execute();
+    $jobCheckResult = $jobCheckQuery->get_result();
 
     if (!$jobCheckResult || $jobCheckResult->num_rows === 0) {
         echo "<script>alert('Invalid job ID. Please try again.'); window.history.back();</script>";
@@ -70,35 +83,43 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>JobConnect | Apply for Job</title>
-  <link rel="stylesheet" href="uploadcv.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobConnect | Apply for Job</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-  <header class="main-header">
-    <div class="header-container">
-      <div class="logo-container">
-        <a href="customerhome.php" class="brand-logo">
-          <div class="icon">💼</div>
-          <span>JobConnect</span>
-        </a>
-      </div>
-      <nav class="nav-links">
-        <a href="#" class="nav-link">Dashboard</a>
-        <a href="#" class="nav-link">Browse Jobs</a>
-        <a href="#" class="nav-link active">Apply</a>
-        <a href="#" class="nav-link">My Applications</a>
-      </nav>
-      <div class="user-actions">
-        <button class="icon-button notification-badge">
-          <span>🔔</span><span class="badge">2</span>
-        </button>
-        <button class="icon-button"><span>🔖</span></button>
-        <div class="user-profile"><div class="profile-avatar">JS</div></div>
-      </div>
-    </div>
-  </header>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="customerhome.php" class="brand-logo">
+                    <div class="icon">💼</div>
+                    <span>JobConnect</span>
+                </a>
+            </div>
+            <nav class="nav-links">
+                <a href="customerhome.php" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Browse Jobs</a>
+                <a href="#" class="nav-link active">Apply</a>
+                <a href="account.php" class="nav-link">Profile</a>
+            </nav>
+            <div class="user-actions">
+                <button class="icon-button notification-badge">
+                    <span>🔔</span>
+                    <span class="badge">2</span>
+                </button>
+                <div class="user-profile">
+                    <div class="profile-avatar">
+                        <?php echo isset($_SESSION['email']) ? substr($_SESSION['email'], 0, 2) : 'G'; ?>
+                    </div>
+                    <div class="profile-dropdown">
+                        <a href="account.php" class="dropdown-item">My Profile</a>
+                        <a href="#" class="dropdown-item logout" onclick="confirmLogout()">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
   <div class="container">
     <div class="application-form-container">
@@ -242,6 +263,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     document.getElementById('coverLetter').addEventListener('change', function (e) {
       const fileName = e.target.files[0] ? e.target.files[0].name : 'No file selected';
       document.getElementById('coverLetterFileName').textContent = fileName;
+    });
+
+    function confirmLogout() {
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "../login/logout.php";
+        }
+    }
+
+    document.querySelector('.user-profile').addEventListener('click', function (e) {
+        e.stopPropagation();
+        this.querySelector('.profile-dropdown').classList.toggle('active');
+    });
+
+    document.addEventListener('click', function () {
+        const dropdown = document.querySelector('.profile-dropdown');
+        if (dropdown && dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+        }
     });
   </script>
 </body>

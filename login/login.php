@@ -1,11 +1,16 @@
 <?php
 session_start();
+
 $loginError = '';
+$loginSuccess = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     $role = $_POST['role'] ?? '';
+
+    // Debug output
+    error_log("Login attempt - Email: $email, Role: $role");
 
     $conn = new mysqli("localhost", "root", "", "jobconnect");
     if ($conn->connect_error) {
@@ -25,37 +30,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = mysqli_real_escape_string($conn, $email);
         $password = mysqli_real_escape_string($conn, $password);
 
+        // Debug the SQL query
         $query = "SELECT * FROM `$table` WHERE email = '$email'";
+        error_log("SQL Query: " . $query);
+
         $result = mysqli_query($conn, $query);
 
         if ($result && mysqli_num_rows($result) === 1) {
             $user = mysqli_fetch_assoc($result);
+            error_log("User found in database");
 
-            if ($password === $user['password']) {
+            // Debug password verification
+            error_log("Stored password: " . $user['password']);
+            
+            // Check if the password is stored as a hash
+            if (strlen($user['password']) > 40) {
+                // Password is hashed
+                $passwordValid = password_verify($password, $user['password']);
+            } else {
+                // Password is stored in plain text (temporary for testing)
+                $passwordValid = ($password === $user['password']);
+            }
+
+            if ($passwordValid) {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $role;
 
-                // Add user's name and other details to session
                 if ($role === 'user') {
-                    $_SESSION['name'] = $user['full_name'] ?? 'User'; // Fetch 'full_name' from the 'user' table
+                    $_SESSION['name'] = $user['full_name'] ?? 'User';
                     header("Location: ../customer/customerhome.php");
-                    exit();
                 } elseif ($role === 'company') {
-                    $_SESSION['company_name'] = $user['name']; // Fetch 'name' from the 'company' table
-                    $_SESSION['branch'] = $user['branch']; // Fetch 'branch' from the 'company' table
-                    $_SESSION['reg_no'] = $user['reg_no']; // Fetch 'reg_no' from the 'company' table
-                    $_SESSION['name'] = $user['name']; // Use 'name' as the display name for the company
+                    $_SESSION['name'] = $user['name'] ?? 'Company';
+                    $_SESSION['branch'] = $user['branch'] ?? '';
+                    $_SESSION['reg_no'] = $user['reg_no'] ?? '';
                     header("Location: ../employee/employeehome.php");
-                    exit();
                 } elseif ($role === 'admin') {
-                    $_SESSION['name'] = $user['name'] ?? 'Admin'; // Fetch 'name' from the 'admin' table
-                    header("Location: admin_dashboard.php");
-                    exit();
+                    $_SESSION['name'] = $user['name'] ?? 'Admin';
+                    header("Location: ../admin/home.php");
                 }
+                exit();
             } else {
+                error_log("Password verification failed");
                 $loginError = "Invalid password.";
             }
         } else {
+            error_log("No user found with email: $email in table: $table");
             $loginError = "User not found.";
         }
     } else {
@@ -65,49 +84,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->close();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>JobConnect - Find Your Dream Job</title>
+    <title>JobConnect - Login</title>
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
     <div class="container">
-        <div class="branding">
+        <!-- Left side - Banner -->
+        <div class="banner">
             <div class="logo">JobConnect</div>
-            <h1 class="tagline">Connect with your dream career opportunity</h1>
-            <p class="description">
-                JobConnect helps job seekers find their ideal positions and enables companies to discover top talent efficiently.
-            </p>
-            <div class="feature-list">
-                <div class="feature"><span class="feature-icon">✓</span><span>Thousands of job listings</span></div>
-                <div class="feature"><span class="feature-icon">✓</span><span>Direct application to top companies</span></div>
-                <div class="feature"><span class="feature-icon">✓</span><span>Smart matching with relevant positions</span></div>
+            <h1 class="tagline">Welcome Back!</h1>
+            <p class="description">Sign in to access your account and explore opportunities.</p>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    <div>Access your personalized dashboard</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    <div>Track your applications</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    <div>Connect with employers</div>
+                </div>
             </div>
         </div>
 
+        <!-- Right side - Login area -->
         <div class="login-area">
             <div class="login-container">
+                <!-- Role selection screen -->
                 <div id="roleSelection">
                     <div class="login-header">
-                        <h2 class="login-title">Welcome to JobConnect</h2>
-                        <p class="login-subtitle">Please select your account type</p>
+                        <h2 class="login-title">Sign in to JobConnect</h2>
+                        <p class="login-subtitle">Select your account type</p>
                     </div>
-                    <div class="role-options">
-                        <div class="role-card" onclick="selectRole('company')">
-                            <div class="role-icon">🏢</div>
-                            <div class="role-name">Company</div>
-                            <div class="role-desc">Post jobs & find candidates</div>
-                        </div>
-                        <div class="role-card" onclick="selectRole('user')">
+                    <div class="role-selection">
+                        <div class="role-option" onclick="selectRole('user')">
                             <div class="role-icon">👤</div>
                             <div class="role-name">Job Seeker</div>
-                            <div class="role-desc">Find & apply to jobs</div>
+                            <div class="role-desc">Find your dream job</div>
                         </div>
-                        <div class="role-card" onclick="selectRole('admin')">
+                        <div class="role-option" onclick="selectRole('company')">
+                            <div class="role-icon">🏢</div>
+                            <div class="role-name">Company</div>
+                            <div class="role-desc">Post jobs & find talent</div>
+                        </div>
+                        <div class="role-option" onclick="selectRole('admin')">
                             <div class="role-icon">⚙️</div>
                             <div class="role-name">Admin</div>
                             <div class="role-desc">Manage the platform</div>
@@ -115,42 +143,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
-                <div id="loginForm" style="display: none;">
+                <!-- Login form -->
+                <div id="loginForm" class="login-form">
                     <div class="login-header">
-                        <h2 class="login-title">Sign in to JobConnect</h2>
-                        <p class="login-subtitle">Enter your credentials to access your account</p>
+                        <h2 class="login-title">Welcome Back!</h2>
+                        <p class="login-subtitle">Enter your credentials to continue</p>
                     </div>
 
-                    <div class="role-badge">
+                    <div class="selected-role" id="selectedRole">
                         <span id="roleIcon">👤</span>
-                        <span id="roleText">Role</span>
+                        <span id="roleName">Job Seeker</span>
                     </div>
 
                     <?php if ($loginError): ?>
-                        <div style="color:red; margin-bottom: 10px;"><?php echo $loginError; ?></div>
+                        <div class="error-message"><?php echo $loginError; ?></div>
+                    <?php elseif ($loginSuccess): ?>
+                        <div class="success-message"><?php echo $loginSuccess; ?></div>
                     <?php endif; ?>
 
                     <form method="POST" action="">
-                        <input type="hidden" name="role" id="hiddenRole" value="user">
+                        <input type="hidden" name="role" id="roleInput" value="">
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" name="email" id="email" placeholder="Enter your email address" required>
+                            <input type="email" name="email" id="email" placeholder="Enter your email" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password" name="password" id="password" placeholder="Enter your password" required>
                         </div>
-                        <div class="forgot-link"><a href="#">Forgot password?</a></div>
+                        <div class="forgot-password">
+                            <a href="#">Forgot your password?</a>
+                        </div>
                         <button type="submit" class="login-button">Sign In</button>
                     </form>
 
-                    <a href="signup.php">
-                        <div class="signup-section">
-                            <p class="signup-text">Don't have an account yet?</p>
-                            <button class="signup-button" onclick="redirectToSignup()">Create Account</button>
-                        </div>
-                    </a>
-                    <button class="back-button" onclick="goBack()">← Back to role selection</button>
+                    <button class="back-button" onclick="goBack()">
+                        <span class="back-arrow">←</span> Back to role selection
+                    </button>
+
+                    <div class="signup-link">
+                        Don't have an account? <a href="signup.php">Create Account</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,33 +193,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function selectRole(role) {
             document.getElementById('roleSelection').style.display = 'none';
             document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('roleInput').value = role;
 
-            const roleLabel = {
-                'company': 'Company',
-                'user': 'Job Seeker',
-                'admin': 'Admin'
-            };
-            const roleIcons = {
-                'company': '🏢',
-                'user': '👤',
-                'admin': '⚙️'
+            const roleLabels = {
+                'user': { name: 'Job Seeker', icon: '👤' },
+                'company': { name: 'Company', icon: '🏢' },
+                'admin': { name: 'Admin', icon: '⚙️' }
             };
 
-            document.getElementById('roleText').innerText = roleLabel[role];
-            document.getElementById('roleIcon').innerText = roleIcons[role];
-            document.getElementById('hiddenRole').value = role;
-
-            localStorage.setItem('selectedRole', role);
+            document.getElementById('roleIcon').innerText = roleLabels[role].icon;
+            document.getElementById('roleName').innerText = roleLabels[role].name;
         }
 
         function goBack() {
             document.getElementById('roleSelection').style.display = 'block';
             document.getElementById('loginForm').style.display = 'none';
-        }
-
-        function redirectToSignup() {
-            const selectedRole = localStorage.getItem('selectedRole') || 'user';
-            window.location.href = 'signup.php?role=' + selectedRole;
         }
     </script>
 </body>

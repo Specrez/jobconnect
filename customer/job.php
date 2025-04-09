@@ -1,19 +1,30 @@
 <?php
+session_start();
+if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'user') {
+    header("Location: ../login/login.php");
+    exit();
+}
+
+// Disable caching
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 // Include the database connection
 require_once "../connect.php";
 
 // Get the job ID from the URL and validate it
 $job_id = isset($_GET['job_id']) ? intval($_GET['job_id']) : 0;
 
-// Fetch job details, replacing job_field ID with its name
-$job_query = "SELECT jf.field_name, j.job_role, j.company_name, j.branch, j.reg_no, j.location, 
-                     j.phone, j.salary, j.requirements, j.description, j.deadline, j.post 
-              FROM job j
-              JOIN field jf ON j.job_field = jf.field_id
-              WHERE j.job_id = $job_id";
-$job_result = $con->query($job_query);
+$stmt = $con->prepare("SELECT jf.field_name, j.job_role, j.company_name, j.branch, j.reg_no, j.location, 
+                              j.phone, j.salary, j.requirements, j.description, j.deadline, j.post 
+                       FROM job j
+                       JOIN field jf ON j.job_field = jf.field_id
+                       WHERE j.job_id = ?");
+$stmt->bind_param("i", $job_id);
+$stmt->execute();
+$job_result = $stmt->get_result();
 
-// Check if job details exist
 $job = ($job_result && $job_result->num_rows > 0) ? $job_result->fetch_assoc() : null;
 ?>
 
@@ -22,11 +33,10 @@ $job = ($job_result && $job_result->num_rows > 0) ? $job_result->fetch_assoc() :
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobConnect | View Job Details</title>
-    <link rel="stylesheet" href="job.css"> <!-- Link to your CSS file -->
+    <title>JobConnect | Job Details</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <!-- Main Header -->
     <header class="main-header">
         <div class="header-container">
             <div class="logo-container">
@@ -34,6 +44,27 @@ $job = ($job_result && $job_result->num_rows > 0) ? $job_result->fetch_assoc() :
                     <div class="icon">💼</div>
                     <span>JobConnect</span>
                 </a>
+            </div>
+            <nav class="nav-links">
+                <a href="customerhome.php" class="nav-link">Home</a>
+                <a href="#" class="nav-link active">Browse Jobs</a>
+                <a href="#" class="nav-link">My Applications</a>
+                <a href="account.php" class="nav-link">Profile</a>
+            </nav>
+            <div class="user-actions">
+                <button class="icon-button notification-badge">
+                    <span>🔔</span>
+                    <span class="badge">2</span>
+                </button>
+                <div class="user-profile">
+                    <div class="profile-avatar">
+                        <?php echo isset($_SESSION['email']) ? substr($_SESSION['email'], 0, 2) : 'G'; ?>
+                    </div>
+                    <div class="profile-dropdown">
+                        <a href="account.php" class="dropdown-item">My Profile</a>
+                        <a href="#" class="dropdown-item logout" onclick="confirmLogout()">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -126,6 +157,26 @@ $job = ($job_result && $job_result->num_rows > 0) ? $job_result->fetch_assoc() :
             </div>
         <?php endif; ?>
     </div>
+
+    <script>
+        function confirmLogout() {
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "../login/logout.php";
+            }
+        }
+
+        document.querySelector('.user-profile').addEventListener('click', function (e) {
+            e.stopPropagation();
+            this.querySelector('.profile-dropdown').classList.toggle('active');
+        });
+
+        document.addEventListener('click', function () {
+            const dropdown = document.querySelector('.profile-dropdown');
+            if (dropdown && dropdown.classList.contains('active')) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
 
