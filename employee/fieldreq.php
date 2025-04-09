@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JobConnect | Apply for Job</title>
     <link rel="stylesheet" href="../customer/uploadcv.css">
+    <link href="../assets/css/main.css" rel="stylesheet">
 </head>
 <body>
     <!-- Main Header -->

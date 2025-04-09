@@ -13,7 +13,7 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'company') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JobConnect | Candidate Dashboard</title>
-    <link href="employee.css" rel="stylesheet">
+    <link href="../assets/css/main.css" rel="stylesheet">
 </head>
 <body>
     <!-- Main Header -->

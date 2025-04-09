@@ -39,7 +39,7 @@ $application = mysqli_fetch_assoc($result);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Details</title>
-    <link rel="stylesheet" href="aaa.css">
+    <link href="../assets/css/main.css" rel="stylesheet">
 </head>
 <body>
     <header>

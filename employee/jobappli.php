@@ -65,7 +65,7 @@ while ($row = mysqli_fetch_assoc($applicants_result)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal - Applications</title>
-    <link rel="stylesheet" href="view.css">
+    <link href="../assets/css/main.css" rel="stylesheet">
 </head>
 <body>
     <header>
