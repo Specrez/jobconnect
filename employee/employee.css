@@ -120,6 +120,8 @@ a {
 }
 
 .user-profile {
+    display: flex;
+    flex-direction: row;
     cursor: pointer;
 }
 

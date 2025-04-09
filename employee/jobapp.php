@@ -1,7 +1,23 @@
 <?php
+session_start();
+
+// Validate session and role
+if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'company') {
+    header("Location: ../login/login.php");
+    exit();
+}
+
 $con = new mysqli("localhost", "root", "", "jobconnect");
 
+// Check connection
+if ($con->connect_error) {
+    die("Connection failed: " . $con->connect_error);
+}
+
+$field_id = isset($_GET['field_id']) ? intval($_GET['field_id']) : 0;
+
 if (isset($_POST['submit'])) {
+    // Get form data
     $job_role = $_POST['job_role'];
     $location = $_POST['location'];
     $phone = $_POST['phone'];
@@ -10,11 +26,38 @@ if (isset($_POST['submit'])) {
     $description = $_POST['description'];
     $deadline = $_POST['deadline'];
 
-    // Insert the data into the database (Fixed table name syntax)
-    $sql = "INSERT INTO job (job_role, location, phone, salary, requirements, description, deadline) 
-            VALUES ('$job_role', '$location', '$phone', '$salary', '$requirements', '$description', '$deadline')";
-    
-    $result = mysqli_query($con, $sql);
+    // Get company details from session
+    $company_name = $_SESSION['company_name'] ?? null;
+    $branch = $_SESSION['branch'] ?? null;
+    $reg_no = $_SESSION['reg_no'] ?? null;
+
+    // Validate session variables
+    if (!$company_name || !$branch || !$reg_no) {
+        echo "<script>alert('Session variables are missing. Please log in again.');</script>";
+        exit();
+    }
+
+    // Validate company details using prepared statements
+    $stmt = $con->prepare("SELECT * FROM company WHERE name = ? AND branch = ? AND reg_no = ?");
+    $stmt->bind_param("sss", $company_name, $branch, $reg_no);
+    $stmt->execute();
+    $company_check_result = $stmt->get_result();
+
+    if ($company_check_result->num_rows > 0) {
+        // Insert into job table
+        $stmt = $con->prepare("INSERT INTO job (job_field, job_role, company_name, branch, reg_no, location, phone, salary, requirements, description, deadline) 
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("issssssssss", $field_id, $job_role, $company_name, $branch, $reg_no, $location, $phone, $salary, $requirements, $description, $deadline);
+        $result = $stmt->execute();
+
+        if ($result) {
+            echo "<script>alert('Job posted successfully!');</script>";
+        } else {
+            echo "<script>alert('Failed to post job. Please try again.');</script>";
+        }
+    } else {
+        echo "<script>alert('Invalid company details. Please contact support.');</script>";
+    }
 }
 ?>
 
@@ -23,7 +66,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobConnect | Candidate Dashboard</title>
+    <title>JobConnect | Employee Dashboard</title>
     <link href="employee.css" rel="stylesheet">
 </head>
 <body>
@@ -31,7 +74,7 @@ if (isset($_POST['submit'])) {
     <header class="main-header">
         <div class="header-container">
             <div class="logo-container">
-                <a href="#" class="brand-logo">
+                <a href="employeehome.php" class="brand-logo">
                     <span class="icon">💼</span>
                     <span>JobConnect</span>
                 </a>
@@ -45,17 +88,10 @@ if (isset($_POST['submit'])) {
             </nav>
             
             <div class="user-actions">
-                <button class="icon-button notification-badge">
-                    <span>🔔</span>
-                    <span class="badge">3</span>
-                </button>
-                
-                <button class="icon-button">
-                    <span>🔖</span>
-                </button>
-                
                 <div class="user-profile">
-                    <div class="profile-avatar">JD</div>
+                    <div class="profile-avatar">
+                    </div>
+                    <?php echo htmlspecialchars($_SESSION['name'] ?? 'Guest'); ?> <!-- Display logged-in user's name -->
                 </div>
             </div>
         </div>

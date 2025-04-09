@@ -3,15 +3,13 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Connect to the database
-$conn = new mysqli("localhost", "root", "", "jobconnect");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Include the database connection
+require_once "../connect.php";
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Sanitize and collect inputs
+    $jobId = isset($_POST["jobId"]) ? intval($_POST["jobId"]) : 0;
     $firstName = $_POST["firstName"];
     $lastName = $_POST["lastName"];
     $email = $_POST["email"];
@@ -24,6 +22,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $skills = $_POST["skills"];
     $whyApplying = $_POST["whyApplying"];
     $additionalInfo = $_POST["additionalInfo"];
+
+    // Validate job_id
+    $jobCheckQuery = "SELECT job_id FROM job WHERE job_id = $jobId";
+    $jobCheckResult = $con->query($jobCheckQuery);
+
+    if (!$jobCheckResult || $jobCheckResult->num_rows === 0) {
+        echo "<script>alert('Invalid job ID. Please try again.'); window.history.back();</script>";
+        exit();
+    }
 
     // File upload
     $uploadDir = "uploads/";
@@ -46,17 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Insert into database
     $sql = "INSERT INTO job_applications 
-        (first_name, last_name, email, phone, address, current_company, current_position, experience, expected_salary, skills, why_applying, additional_info, resume_path, cover_letter_path) 
+        (job_id, first_name, last_name, email, phone, address, current_company, current_position, experience, expected_salary, skills, why_applying, additional_info, resume_path, cover_letter_path) 
         VALUES 
-        ('$firstName', '$lastName', '$email', '$phone', '$address', '$currentCompany', '$currentPosition', '$experience', '$expectedSalary', '$skills', '$whyApplying', '$additionalInfo', '$resumePath', '$coverLetterPath')";
+        ('$jobId', '$firstName', '$lastName', '$email', '$phone', '$address', '$currentCompany', '$currentPosition', '$experience', '$expectedSalary', '$skills', '$whyApplying', '$additionalInfo', '$resumePath', '$coverLetterPath')";
 
-    if ($conn->query($sql) === TRUE) {
+    if ($con->query($sql) === TRUE) {
         echo "<script>alert('Application submitted successfully!'); window.location.href = 'customerhome.php';</script>";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $sql . "<br>" . $con->error;
     }
 
-    $conn->close();
+    $con->close();
 }
 ?>
 
@@ -98,6 +105,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <h2 class="form-title">Submit Your Application</h2>
 
       <form id="jobApplicationForm" action="uploadcv.php" method="post" enctype="multipart/form-data">
+        <!-- Corrected hidden input for job_id -->
+        <input type="hidden" name="jobId" value="<?php echo isset($_GET['jobId']) ? htmlspecialchars($_GET['jobId']) : ''; ?>" />
+        
         <div class="form-section">
           <h3 class="section-title">Personal Information</h3>
           <div class="form-row">

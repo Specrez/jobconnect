@@ -1,13 +1,6 @@
 <?php
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Database connection
-$conn = new mysqli("localhost", "root", "", "jobconnect");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Include the database connection
+require_once "../connect.php";
 
 // Get the job ID from the URL and validate it
 $job_id = isset($_GET['job_id']) ? intval($_GET['job_id']) : 0;
@@ -18,15 +11,10 @@ $job_query = "SELECT jf.field_name, j.job_role, j.company_name, j.branch, j.reg_
               FROM job j
               JOIN field jf ON j.job_field = jf.field_id
               WHERE j.job_id = $job_id";
-
-$job_result = $conn->query($job_query);
+$job_result = $con->query($job_query);
 
 // Check if job details exist
-if ($job_result && $job_result->num_rows > 0) {
-    $job = $job_result->fetch_assoc();
-} else {
-    $job = null; // If job not found
-}
+$job = ($job_result && $job_result->num_rows > 0) ? $job_result->fetch_assoc() : null;
 ?>
 
 <!DOCTYPE html>
@@ -126,7 +114,7 @@ if ($job_result && $job_result->num_rows > 0) {
                     </div>
                     
                     <div class="action-buttons">
-                        <a href="uploadcv.php?job_id=<?php echo $job_id; ?>" class="btn btn-primary">Apply</a>
+                        <a href="uploadcv.php?jobId=<?php echo $job_id; ?>" class="btn btn-primary">Apply</a>
                     </div>
                 </form>
             </div>
@@ -142,6 +130,5 @@ if ($job_result && $job_result->num_rows > 0) {
 </html>
 
 <?php
-// Close database connection
-$conn->close();
+$con->close();
 ?>

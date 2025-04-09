@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+// Validate session and role
+if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'company') {
+    header("Location: ../login/login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +44,11 @@
                 </button>
                 
                 <div class="user-profile">
-                    <div class="profile-avatar">JD</div>
+                    <div class="profile-avatar">
+                    </div>
+                    <div>
+                        <?php echo htmlspecialchars($_SESSION['name'] ?? 'Guest'); ?> <!-- Display logged-in user's name -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,14 +72,14 @@
             
             <div class="job-grid-container">
                 <div class="job-grid">
-                    <a href="fields.html">
+                    <a href="fields.php">
                         <div class="job-card">
                             <div class="job-card-placeholder">
                                 <span class="icon-large"><h1>Add Job</h1></span>
                             </div>
                         </div>
                     </a>
-                    <a href="fields.html">
+                    <a href="joblist.php">
                     <div class="job-card">
                         <div class="job-card-placeholder">
                             <span class="icon-large"><h1>View Jobs</h1></span>

@@ -1,34 +1,21 @@
 <?php
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Database connection
-$conn = new mysqli("localhost", "root", "", "jobconnect");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Include the database connection
+require_once "../connect.php";
 
 // Get the field ID from the URL safely
 $field_id = isset($_GET['field_id']) ? intval($_GET['field_id']) : 0;
 
 // Fetch the field name based on field_id
-$field_query = "SELECT field_name FROM field WHERE field_id = ?";
-$stmt = $conn->prepare($field_query);
-$stmt->bind_param("i", $field_id);
-$stmt->execute();
-$field_result = $stmt->get_result();
+$field_query = "SELECT field_name FROM field WHERE field_id = $field_id";
+$field_result = $con->query($field_query);
 
-$field_name = ($field_result->num_rows > 0) ? $field_result->fetch_assoc()['field_name'] : 'Unknown Field';
+$field_name = ($field_result && $field_result->num_rows > 0) ? $field_result->fetch_assoc()['field_name'] : 'Unknown Field';
 
 // Fetch jobs related to the selected field
 $jobs_query = "SELECT j.job_id, j.job_role, j.location, j.salary, j.company_name 
                FROM job j
-               WHERE j.job_field = ?";
-$stmt = $conn->prepare($jobs_query);
-$stmt->bind_param("i", $field_id);
-$stmt->execute();
-$jobs_result = $stmt->get_result();
+               WHERE j.job_field = $field_id";
+$jobs_result = $con->query($jobs_query);
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +47,7 @@ $jobs_result = $stmt->get_result();
         <section>
             <div class="job-grid-container">
                 <div class="job-grid">
-                    <?php if ($jobs_result->num_rows > 0) { 
+                    <?php if ($jobs_result && $jobs_result->num_rows > 0) { 
                         while ($job = $jobs_result->fetch_assoc()) { ?>
                             <a href="job.php?job_id=<?php echo $job['job_id']; ?>" class="job-card-link">
                                 <div class="job-card">
@@ -89,7 +76,5 @@ $jobs_result = $stmt->get_result();
 </html>
 
 <?php
-// Close the connection
-$stmt->close();
-$conn->close();
+$con->close();
 ?>
