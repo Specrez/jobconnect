@@ -9,6 +9,9 @@
 <body>
     <div class="header">
         <h1>Field Request Management</h1>
+        <div class="nav-bar">
+            <a href="../login/logout.php" class="btn btn-reject">Logout</a>
+        </div>
     </div>
     
     <div class="container">

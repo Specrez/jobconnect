@@ -61,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header("Location: ../customer/customerhome.php");
                 } elseif ($role === 'company') {
                     $_SESSION['name'] = $user['name'] ?? 'Company';
+                    $_SESSION['company_name'] = $user['name'] ?? 'Company';
                     $_SESSION['branch'] = $user['branch'] ?? '';
                     $_SESSION['reg_no'] = $user['reg_no'] ?? '';
                     header("Location: ../employee/employeehome.php");
@@ -140,6 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="role-name">Admin</div>
                             <div class="role-desc">Manage the platform</div>
                         </div>
+                    </div>
+                    <div class="signup-link">
+                        Don't have an account? <a href="signup.php">Create Account</a>
                     </div>
                 </div>
 

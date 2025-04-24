@@ -32,43 +32,153 @@ if (!$result || mysqli_num_rows($result) === 0) {
 
 $application = mysqli_fetch_assoc($result);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Details</title>
+    <title>JobConnect | Application Details</title>
     <link href="../assets/css/main.css" rel="stylesheet">
+    <link href="employee.css" rel="stylesheet">
+    <link href="details.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Application Details</h1>
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="#" class="brand-logo">
+                    <span class="icon">💼</span>
+                    <span>JobConnect</span>
+                </a>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="employeehome.php" class="nav-link active">Dashboard</a>
+                <a href="joblist.php" class="nav-link">Posted Jobs</a>
+            </nav>
+            
+            <div class="user-actions">
+                
+                <div class="user-profile">
+                    <a link href="acc.php" class="profile-link" title="My Account">
+                    <div class="profile-avatar">
+                        <span style="font-size:1.1rem;">
+                            <?php echo strtoupper(substr($_SESSION['name'] ?? 'G', 0, 1)); ?>
+                        </span>
+                    </div>
+                    </a>
+                    <div style="font-weight:600;">
+                        <?php echo htmlspecialchars($_SESSION['name'] ?? 'Guest'); ?>
+                    </div>
+                </div>
+                <a href="../login/logout.php" class="nav-link" style="color: #ff4444; margin-left: 1rem;">
+                    Logout
+                </a>
+            </div>
         </div>
     </header>
 
-    <div class="container">
+    <main class="main-content">
+        <div class="breadcrumbs">
+            <a href="employeehome.php">Dashboard</a>
+            <span>/</span>
+            <a href="joblist.php">Posted Jobs</a>
+            <span>/</span>
+            <span>Application Details</span>
+        </div>
+
         <div class="application-details">
             <h2><?php echo htmlspecialchars($application['first_name'] . ' ' . $application['last_name']); ?></h2>
-            <p><strong>Job Role:</strong> <?php echo htmlspecialchars($application['job_role']); ?></p>
-            <p><strong>Email:</strong> <?php echo htmlspecialchars($application['email']); ?></p>
-            <p><strong>Phone:</strong> <?php echo htmlspecialchars($application['phone']); ?></p>
-            <p><strong>Address:</strong> <?php echo htmlspecialchars($application['address']); ?></p>
-            <p><strong>Current Company:</strong> <?php echo htmlspecialchars($application['current_company']); ?></p>
-            <p><strong>Current Position:</strong> <?php echo htmlspecialchars($application['current_position']); ?></p>
-            <p><strong>Experience:</strong> <?php echo htmlspecialchars($application['experience']); ?> years</p>
-            <p><strong>Expected Salary:</strong> <?php echo htmlspecialchars($application['expected_salary']); ?></p>
-            <p><strong>Skills:</strong> <?php echo htmlspecialchars($application['skills']); ?></p>
-            <p><strong>Why Applying:</strong> <?php echo htmlspecialchars($application['why_applying']); ?></p>
-            <p><strong>Additional Info:</strong> <?php echo htmlspecialchars($application['additional_info']); ?></p>
-            <p><strong>Resume:</strong> <a href="<?php echo htmlspecialchars($application['resume_path']); ?>" target="_blank">Download</a></p>
-            <?php if (!empty($application['cover_letter_path'])): ?>
-                <p><strong>Cover Letter:</strong> <a href="<?php echo htmlspecialchars($application['cover_letter_path']); ?>" target="_blank">Download</a></p>
-            <?php endif; ?>
-            <p><strong>Submitted At:</strong> <?php echo htmlspecialchars($application['submitted_at']); ?></p>
+            
+            <div class="detail-section">
+                <h3>Basic Information</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Job Role</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['job_role']); ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['email']); ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Phone</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['phone']); ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Address</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['address']); ?></span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>Professional Information</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Current Company</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['current_company']); ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Current Position</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['current_position']); ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Experience</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['experience']); ?> years</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Expected Salary</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['expected_salary']); ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Skills</span>
+                    <span class="detail-value"><?php echo htmlspecialchars($application['skills']); ?></span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>Additional Information</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Why Applying</span>
+                    <span class="detail-value"><?php echo nl2br(htmlspecialchars($application['why_applying'])); ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Additional Info</span>
+                    <span class="detail-value"><?php echo nl2br(htmlspecialchars($application['additional_info'])); ?></span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>Documents</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Resume</span>
+                    <span class="detail-value">
+                        <?php if (!empty($application['resume_path'])): ?>
+                            <a href="download.php?type=resume&application_id=<?php echo $application_id; ?>" class="document-link">
+                                Download Resume
+                            </a>
+                        <?php else: ?>
+                            <span class="text-muted">Resume not available</span>
+                        <?php endif; ?>
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Cover Letter</span>
+                    <span class="detail-value">
+                        <?php if (!empty($application['cover_letter_path'])): ?>
+                            <a href="download.php?type=cover_letter&application_id=<?php echo $application_id; ?>" class="document-link">
+                                Download Cover Letter
+                            </a>
+                        <?php else: ?>
+                            <span class="text-muted">Cover letter not available</span>
+                        <?php endif; ?>
+                    </span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="window.history.back()">Back to Applications</button>
+            </div>
         </div>
-        <button onclick="window.history.back()">Back</button>
-    </div>
+    </main>
 </body>
 </html>

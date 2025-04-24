@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   VALUES ('$field_name', '$description', '$company', '$branch', '$reg_no', NOW())";
 
         if ($conn->query($query) === TRUE) {
-            echo "Field request submitted successfully.";
+            echo "<script>alert('Request submitted successfully!');</script>";
+            echo "<script>window.location.href='fields.php';</script>";
         } else {
             echo "Error: " . $conn->error;
         }
@@ -32,15 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobConnect | Apply for Job</title>
-    <link rel="stylesheet" href="../customer/uploadcv.css">
+    <title>JobConnect | Request New Field</title>
     <link href="../assets/css/main.css" rel="stylesheet">
+    <link href="employee.css" rel="stylesheet">
+    <link href="fieldreq.css" rel="stylesheet">
 </head>
 <body>
     <!-- Main Header -->
@@ -48,67 +49,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-container">
             <div class="logo-container">
                 <a href="#" class="brand-logo">
-                    <div class="icon">💼</div>
+                    <span class="icon">💼</span>
                     <span>JobConnect</span>
                 </a>
             </div>
             
             <nav class="nav-links">
-                <a href="#" class="nav-link">Dashboard</a>
-                <a href="#" class="nav-link">Browse Jobs</a>
-                <a href="#" class="nav-link active">Apply</a>
-                <a href="#" class="nav-link">My Applications</a>
+                <a href="employeehome.php" class="nav-link active">Dashboard</a>
+                <a href="joblist.php" class="nav-link">Posted Jobs</a>
             </nav>
             
             <div class="user-actions">
-                <button class="icon-button notification-badge">
-                    <span>🔔</span>
-                    <span class="badge">2</span>
-                </button>
-                
-                <button class="icon-button">
-                    <span>🔖</span>
-                </button>
                 
                 <div class="user-profile">
-                    <div class="profile-avatar">JS</div>
+                    <a link href="acc.php" class="profile-link" title="My Account">
+                    <div class="profile-avatar">
+                        <span style="font-size:1.1rem;">
+                            <?php echo strtoupper(substr($_SESSION['name'] ?? 'G', 0, 1)); ?>
+                        </span>
+                    </div>
+                    </a>
+                    <div style="font-weight:600;">
+                        <?php echo htmlspecialchars($_SESSION['name'] ?? 'Guest'); ?>
+                    </div>
                 </div>
+                <a href="../login/logout.php" class="nav-link" style="color: #ff4444; margin-left: 1rem;">
+                    Logout
+                </a>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        
-        <!-- Application Form -->
-        <div class="application-form-container">
-            <h2 class="form-title">Request for a Field</h2>
-            
-            <form id="jobApplicationForm" action="#" method="post" enctype="multipart/form-data">
-                <!-- Information Section -->
-                <div class="form-section">
-                    <h3 class="section-title">Required Field Information</h3>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="field_name" class="form-label required">Field Name</label>
-                            <input type="text" id="field_name" name="field_name" class="form-control" required>
-                        </div>
-                    </div>
+    <main class="main-content">
+        <div class="breadcrumbs">
+            <a href="employeehome.php">Dashboard</a>
+            <span>/</span>
+            <a href="fields.php">Job Fields</a>
+            <span>/</span>
+            <span>Request New Field</span>
+        </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="description" class="form-label required">Description</label>
-                            <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
-                        </div>
-                    </div>
+        <div class="page-header">
+            <h1 class="page-title">Request New Job Field</h1>
+            <p class="page-subtitle">Submit a request to add a new job field to our platform</p>
+        </div>
 
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">Back to Jobs</button>
-                    <button type="submit" class="btn btn-primary">Request Admin</button>
+        <div class="form-container">
+            <form method="post" class="field-request-form">
+                <div class="form-group">
+                    <label for="field_name">Field Name</label>
+                    <input type="text" id="field_name" name="field_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="6" required></textarea>
+                    <p class="form-hint">Please provide a detailed description of this job field and why it should be added.</p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='fields.php'">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
                 </div>
             </form>
         </div>
-    </div>
+    </main>
 </body>
 </html>

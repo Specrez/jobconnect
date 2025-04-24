@@ -64,27 +64,57 @@ while ($row = mysqli_fetch_assoc($applicants_result)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Portal - Applications</title>
+    <title>JobConnect | Applications</title>
     <link href="../assets/css/main.css" rel="stylesheet">
+    <link href="employee.css" rel="stylesheet">
+    <link href="jobappli.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Company Job Portal</h1>
-            <div class="user-info">
-                <span>Admin User</span>
-                <img src="/api/placeholder/40/40" alt="User Avatar">
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="#" class="brand-logo">
+                    <span class="icon">💼</span>
+                    <span>JobConnect</span>
+                </a>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="employeehome.php" class="nav-link active">Dashboard</a>
+                <a href="joblist.php" class="nav-link">Posted Jobs</a>
+            </nav>
+            
+            <div class="user-actions">
+                
+                <div class="user-profile">
+                    <a link href="acc.php" class="profile-link" title="My Account">
+                    <div class="profile-avatar">
+                        <span style="font-size:1.1rem;">
+                            <?php echo strtoupper(substr($_SESSION['name'] ?? 'G', 0, 1)); ?>
+                        </span>
+                    </div>
+                    </a>
+                    <div style="font-weight:600;">
+                        <?php echo htmlspecialchars($_SESSION['name'] ?? 'Guest'); ?>
+                    </div>
+                </div>
+                <a href="../login/logout.php" class="nav-link" style="color: #ff4444; margin-left: 1rem;">
+                    Logout
+                </a>
             </div>
         </div>
     </header>
 
-    <div class="container">
+    <main class="main-content">
         <div class="breadcrumbs">
-            <a href="jobs.html">Jobs</a>
-            <span>></span>
-            <a href="#"><?php echo htmlspecialchars($job['job_role']); ?></a>
+            <a href="employeehome.php">Dashboard</a>
+            <span>/</span>
+            <a href="joblist.php">Posted Jobs</a>
+            <span>/</span>
+            <span><?php echo htmlspecialchars($job['job_role']); ?></span>
         </div>
-        
+
         <div class="job-info">
             <h3><?php echo htmlspecialchars($job['job_role']); ?></h3>
             <p><strong>Field:</strong> <?php echo htmlspecialchars($job['job_field']); ?></p>
@@ -117,6 +147,6 @@ while ($row = mysqli_fetch_assoc($applicants_result)) {
                 <?php endforeach; ?>
             </div>
         </div>
-    </div>
+    </main>
 </body>
 </html>

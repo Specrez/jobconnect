@@ -148,7 +148,7 @@ $conn->close();
                         <span class="back-arrow">←</span> Back to role selection
                     </button>
                     <div class="login-link">
-                        Already have an account? <a href="#">Sign In</a>
+                        Already have an account? <a href="login.php">Sign In</a>
                     </div>
                 </div>
 
@@ -202,7 +202,7 @@ $conn->close();
                         <span class="back-arrow">←</span> Back to role selection
                     </button>
                     <div class="login-link">
-                        Already have an account? <a href="#">Sign In</a>
+                        Already have an account? <a href="login.php">Sign In</a>
                     </div>
                 </div>
             </div>
