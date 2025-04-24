@@ -16,14 +16,12 @@ require_once "../connect.php";
 // Get the job ID from the URL and validate it
 $job_id = isset($_GET['job_id']) ? intval($_GET['job_id']) : 0;
 
-$stmt = $con->prepare("SELECT jf.field_name, j.job_role, j.company_name, j.branch, j.reg_no, j.location, 
-                              j.phone, j.salary, j.requirements, j.description, j.deadline, j.post 
-                       FROM job j
-                       JOIN field jf ON j.job_field = jf.field_id
-                       WHERE j.job_id = ?");
-$stmt->bind_param("i", $job_id);
-$stmt->execute();
-$job_result = $stmt->get_result();
+$sql = "SELECT jf.field_name, j.job_role, j.company_name, j.branch, j.reg_no, j.location, 
+               j.phone, j.salary, j.requirements, j.description, j.deadline, j.post 
+        FROM job j
+        JOIN field jf ON j.job_field = jf.field_id
+        WHERE j.job_id = $job_id";
+$job_result = $con->query($sql);
 
 $job = ($job_result && $job_result->num_rows > 0) ? $job_result->fetch_assoc() : null;
 ?>

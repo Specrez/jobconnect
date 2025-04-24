@@ -104,9 +104,6 @@ $fields_result = $con->query($fields_query);
                     <?php } ?>
                 </div>
             </div>
-            <div class="action-buttons">
-                <a href="account.php" class="btn btn-primary">View Profile</a>
-            </div>
         </div>
     </main>
     <script>
