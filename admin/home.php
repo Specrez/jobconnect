@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../login/login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,31 +41,31 @@
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                $query = "SELECT * FROM field_req";
+                // Get all requests ordered by date, pending first
+                $query = "SELECT * FROM field_req ORDER BY FIELD(status, 'pending', 'approved', 'rejected'), date DESC";
                 $result = $conn->query($query);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         $status = $row['status'];
+                        $statusClass = strtolower($status);
                         echo "<tr>
                             <td>{$row['field_id']}</td>
                             <td>{$row['company']}</td>
                             <td>{$row['field_name']}</td>
                             <td>{$row['date']}</td>
-                            <td><span class='" . strtolower($status) . "'>" . ucfirst($status) . "</span></td>
+                            <td><span class='status-{$statusClass}'>{$status}</span></td>
                             <td>
                                 <button class='btn btn-view' onclick=\"viewRequest('{$row['field_name']}', '{$row['description']}')\">View</button>";
                         if ($status === 'pending') {
                             echo "<button class='btn btn-approve' onclick=\"approveRequest({$row['field_id']}, '{$row['field_name']}')\">Approve</button>
                                   <button class='btn btn-reject' onclick=\"rejectRequest({$row['field_id']})\">Reject</button>";
                         }
-                        echo "</td>
-                        </tr>";
+                        echo "</td></tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>No pending requests.</td></tr>";
+                    echo "<tr><td colspan='6'>No field requests found</td></tr>";
                 }
-
                 $conn->close();
                 ?>
             </tbody>
@@ -155,16 +162,16 @@
         }
         
         function approveRequest(requestId, fieldName) {
-            if (confirm("Are you sure you want to approve this request?")) {
+            if (!requestId || !fieldName) return;
+            
+            if (confirm("Are you sure you want to approve this field request?")) {
                 const xhr = new XMLHttpRequest();
-                xhr.open("POST", "process_request.php", true);
+                xhr.open("POST", "process_request.php");
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onload = function () {
+                xhr.onload = function() {
                     if (xhr.status === 200) {
                         alert(xhr.responseText);
                         location.reload();
-                    } else {
-                        alert("An error occurred while processing the request.");
                     }
                 };
                 xhr.send(`action=approve&request_id=${requestId}&field_name=${encodeURIComponent(fieldName)}`);
@@ -172,16 +179,16 @@
         }
 
         function rejectRequest(requestId) {
-            if (confirm("Are you sure you want to reject this request?")) {
+            if (!requestId) return;
+            
+            if (confirm("Are you sure you want to reject this field request?")) {
                 const xhr = new XMLHttpRequest();
-                xhr.open("POST", "process_request.php", true);
+                xhr.open("POST", "process_request.php");
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onload = function () {
+                xhr.onload = function() {
                     if (xhr.status === 200) {
                         alert(xhr.responseText);
                         location.reload();
-                    } else {
-                        alert("An error occurred while processing the request.");
                     }
                 };
                 xhr.send(`action=reject&request_id=${requestId}`);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 08, 2025 at 07:39 AM
+-- Generation Time: Apr 24, 2025 at 10:59 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,24 @@ SET time_zone = "+00:00";
 --
 -- Database: `jobconnect`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`email`, `password`) VALUES
+('admin@gmail.com', '1234');
 
 -- --------------------------------------------------------
 
@@ -44,6 +62,7 @@ CREATE TABLE `company` (
 
 INSERT INTO `company` (`name`, `email`, `password`, `branch`, `address`, `phone_number`, `reg_no`, `date`) VALUES
 ('ABC Constructions', '', '', 'South', NULL, NULL, 'AC009', '2025-04-07 11:44:04'),
+('ala company', 'ala@gmail.com', '1234', 'kandy', 'asdcvb', '0755490025', 'qwert', '2025-04-08 23:39:12'),
 ('BrandBoost', '', '', 'East', NULL, NULL, 'BB003', '2025-04-07 11:44:04'),
 ('BuildTech', '', '', 'North', NULL, NULL, 'BT010', '2025-04-07 11:44:04'),
 ('City Hospital', '', '', 'West', NULL, NULL, 'CH008', '2025-04-07 11:44:04'),
@@ -53,12 +72,15 @@ INSERT INTO `company` (`name`, `email`, `password`, `branch`, `address`, `phone_
 ('FinancePro', '', '', 'Main', NULL, NULL, 'FP005', '2025-04-07 11:44:04'),
 ('Innovate Ltd', '', '', 'West', NULL, NULL, 'IL002', '2025-04-07 11:44:04'),
 ('Innovate Ltd', '', '', 'West', '321 Lane, Town', '4445556666', 'IL456', '2025-04-07 11:44:04'),
+('lakshapana', 'laksha@gmail.com', '1234', 'colombo', 'kandy', '12345', 'aa@11', '2025-04-23 23:21:42'),
 ('MediCare', '', '', 'Central', NULL, NULL, 'MC007', '2025-04-07 11:44:04'),
 ('oshadha', 'oshadha.dw@gmail.com', '1234', 'ert', '451/1 Pahala Eriyagama Peradeniya', '0755490025', 'dfg', '2025-04-08 10:42:19'),
 ('oshadha', 'oshadha.dw@gmail.com', '$2y$10$xfpCY3shdTso8c7pYLmtru7YAAmjsrX1ve8yv4pTrWjFy6jHN.Bbe', 'kandy', '451/1 Pahala Eriyagama Peradeniya', '0755490025', 'abc@111', '2025-04-07 11:44:04'),
 ('qewgr', 'oshadha.dw@gmail.com', '$2y$10$apO0guKU2WGp7bZ.Bt/ub.v8ajheTK8LPdzf9zhDTjQFUFla5UDLa', 'kandy', '451/1 Pahala Eriyagama Peradeniya', '0755490025', 'abc@111', '2025-04-07 11:44:04'),
 ('TechCorp', '', '', 'Main', NULL, NULL, 'TC001', '2025-04-07 11:44:04'),
 ('TechCorp', '', '', 'Main', '789 Road, City', '1112223333', 'TC123', '2025-04-07 11:44:04'),
+('technohub', 'technohub@gmail.com', '123456', 'colombo', 'colombo kandy', '0112233445', 'asd@123', '2025-04-08 13:40:32'),
+('UCSC', 'UCSC@gmail.com', '1234', 'colombo', 'colombo', '12345678', 'ucsc@123', '2025-04-24 14:14:04'),
 ('Wealth Advisors', '', '', 'South', NULL, NULL, 'WA006', '2025-04-07 11:44:04');
 
 -- --------------------------------------------------------
@@ -88,8 +110,39 @@ INSERT INTO `field` (`field_id`, `field_name`) VALUES
 (25, 'Logistics & Supply Chain'),
 (29, 'Manufacturing'),
 (2, 'Marketing'),
+(38, 'math'),
 (22, 'Sales & Retail'),
-(1, 'Software Development');
+(36, 'sci'),
+(1, 'Software Development'),
+(30, 'tech');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `field_req`
+--
+
+CREATE TABLE `field_req` (
+  `field_id` int(11) NOT NULL,
+  `field_name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `company` varchar(255) NOT NULL,
+  `branch` varchar(255) NOT NULL,
+  `reg_no` varchar(50) NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `field_req`
+--
+
+INSERT INTO `field_req` (`field_id`, `field_name`, `description`, `company`, `branch`, `reg_no`, `date`, `status`) VALUES
+(1, 'sci', 'scicicicicic', 'ala company', 'kandy', 'qwert', '2025-04-09 09:33:23', 'approved'),
+(2, 'sci', 'scicicicicic', 'ala company', 'kandy', 'qwert', '2025-04-09 12:13:06', 'rejected'),
+(3, 'math', 'dsf', 'lakshapana', 'colombo', 'aa@11', '2025-04-23 23:46:23', 'approved'),
+(4, 'math', 'dsf', 'lakshapana', 'colombo', 'aa@11', '2025-04-23 23:47:08', 'rejected'),
+(5, 'computer', 'computing', 'UCSC', 'colombo', 'ucsc@123', '2025-04-24 14:18:47', 'pending');
 
 -- --------------------------------------------------------
 
@@ -175,7 +228,18 @@ INSERT INTO `job` (`job_id`, `job_field`, `job_role`, `company_name`, `branch`, 
 (212, 28, 'Civil Engineer', NULL, NULL, NULL, 'Colombo', '0778765432', 120000.00, 'BSc in Civil Engineering', 'Supervise construction projects', '2025-09-10 00:00:00', '2025-04-03 11:25:53'),
 (213, 28, 'Site Supervisor', NULL, NULL, NULL, 'Kandy', '0761239876', 80000.00, 'Experience in site management', 'Oversee site operations', '2025-09-15 00:00:00', '2025-04-03 11:25:53'),
 (214, NULL, '213', NULL, NULL, NULL, 'eqrw', '1`23456', 0.00, '3ref', 'wrefd', '2025-04-30 00:00:00', '2025-04-06 15:17:55'),
-(215, NULL, 'hi', NULL, NULL, NULL, 'wq', '23435', 13243.00, 'erwfgsd', 'rwesgfd', '2025-04-09 00:00:00', '2025-04-06 16:18:01');
+(215, NULL, 'hi', NULL, NULL, NULL, 'wq', '23435', 13243.00, 'erwfgsd', 'rwesgfd', '2025-04-09 00:00:00', '2025-04-06 16:18:01'),
+(216, NULL, 'hi', NULL, NULL, NULL, 'eqrw', '123', 13243.00, 'qwer', 'qwer', '2025-04-16 00:00:00', '2025-04-08 11:16:35'),
+(217, 27, 'hi', NULL, NULL, NULL, 's', '134234', 213456.00, '213ew', 'sADFSGDHFGJHKLOI', '2025-05-02 00:00:00', '2025-04-08 11:40:14'),
+(223, 28, 'hi', 'deshan', 'rty', '123', 'eqwf', '081-2389194', 13243.00, 'q', 'dwsa', '2025-05-07 00:00:00', '2025-04-08 13:33:49'),
+(224, 4, 'doctor', 'technohub', 'colombo', 'asd@123', 'colombo', '081-2389194', 1230000.00, 'qwerty', 'asdfgh', '2025-05-10 00:00:00', '2025-04-08 13:41:49'),
+(225, 4, 'doctor', 'technohub', 'colombo', 'asd@123', 'colombo', '081-2389194', 1230000.00, 'qwerty', 'asdfgh', '2025-05-10 00:00:00', '2025-04-08 13:46:11'),
+(226, 4, 'doctor', 'technohub', 'colombo', 'asd@123', 'colombo', '081-2389194', 1230000.00, 'qwerty', 'asdfgh', '2025-05-10 00:00:00', '2025-04-08 13:48:52'),
+(227, 4, 'doctor', 'technohub', 'colombo', 'asd@123', 'colombo', '081-2389194', 1230000.00, 'qwerty', 'asdfgh', '2025-05-10 00:00:00', '2025-04-08 13:49:07'),
+(228, 2, 'marketer', 'deshan', 'rty', '123', 'gampaha', '12345678', 45678.00, 'kanna puluwan', 'bonna puluwan', '2025-05-08 00:00:00', '2025-04-08 17:57:14'),
+(229, 3, 'finance', 'ala company', 'kandy', 'qwert', 'kandy', '081-2389194', 100000.00, 'qwertt', 'ertyuu', '2025-05-02 00:00:00', '2025-04-08 23:43:11'),
+(230, 21, 'lawyer', 'lakshapana', 'colombo', 'aa@11', 'colombo', '1234456', 121433.00, 'ewfdsg', 'Dxzvcbfdgte', '2025-05-09 00:00:00', '2025-04-23 23:22:47'),
+(232, 30, 'software engineer', 'UCSC', 'colombo', 'ucsc@123', 'colombo', '123456678', 34567.00, 'computer science', 'helooo', '2025-05-09 00:00:00', '2025-04-24 14:15:28');
 
 -- --------------------------------------------------------
 
@@ -208,8 +272,15 @@ CREATE TABLE `job_applications` (
 --
 
 INSERT INTO `job_applications` (`application_id`, `job_id`, `first_name`, `last_name`, `email`, `phone`, `address`, `current_company`, `current_position`, `experience`, `expected_salary`, `skills`, `why_applying`, `additional_info`, `resume_path`, `cover_letter_path`, `submitted_at`) VALUES
-(1, 152, 'Oshadha', 'Weerakoon', 'oshadha.dw@gmail.com', '123456789', '451/1 Pahala Eriyagama Peradeniya', '', '', 3, '', 'wqerth', 'qweregrhdgfn', '', 'uploads/1743929814_IS 1111 (1).pdf', 'uploads/1743929814_IS 1109 (2).pdf', '2025-04-06 08:56:54'),
-(2, 153, 'Oshadha', 'Weerakoon', 'oshadha.dw@gmail.com', '2345678', '451/1 Pahala Eriyagama Peradeniya', 'dsaf', '', 2, '', 'qdvfb', 'dasfg', '', 'uploads/1743936676_IS 1111 (1).pdf', 'uploads/1743936676_IS 1115.pdf', '2025-04-06 10:51:16');
+(6, 227, 'jhone', 'deshan', 'oshadha.dw@gmail.com', '1234567', '451/1 Pahala Eriyagama Peradeniya', '132r', 'efgh', 3, '45678', 'dsfsghjmhngbv', 'dfghrtjmhbdvsfdq', 'sfdgfetwrfas', 'uploads/1744114317_IS 1111 (1).pdf', 'uploads/1744114317_IS 1115.pdf', '2025-04-08 12:11:57'),
+(7, 227, 'Oshadha', 'Weerakoon', 'oshadha.dw@gmail.com', '12345678', '451/1 Pahala Eriyagama Peradeniya', 'ewrt', 'efgh', 4, '1234567', 'dasfdghjhythrgfdsa', 'fghfdgjkyftjhdgsfd', 'fghfbdfsd', 'uploads/1744114360_IS 1111 (1).pdf', 'uploads/1744114360_IS 1115.pdf', '2025-04-08 12:12:40'),
+(8, 228, 'alaya', 'bathalaya', 'bathala@gmail.com', '12345678', 'wergthyjuik', 'sdfg', 'sdfg', 4, '567890', 'dsfgsfhjkjydthrsgef', 'dfhetragdshfgref', 'fhgdfsdafd', 'uploads/1744115361_IS 1108.pdf', 'uploads/1744115361_IS 2110.pdf', '2025-04-08 12:29:21'),
+(9, 228, 'Oshadha', 'Weerakoon', 'oshadha.dw@gmail.com', '567876543', '451/1 Pahala Eriyagama Peradeniya', 'ewddf', 'dfsvf', 4, 'dsfg', 'ryhtgfdsc', 'vfsfdvf', 'ervfdsc', 'uploads/1744115590_IS 1111 (1).pdf', 'uploads/1744115590_IS 1115.pdf', '2025-04-08 12:33:10'),
+(10, 229, 'kavishka', 'nalan', 'kana@gmail.com', '12345678', '451/1 Pahala Eriyagama Peradeniya', 'ala', 'ala', 4, '450000', 'ety', 'dfgh', 'dfg', 'uploads/1744136089_IS 1115.pdf', 'uploads/1744136089_IS 1113 (2).pdf', '2025-04-08 18:14:49'),
+(11, 163, 'dasun', 'madushan', 'da@gmail.com', '12345678', 'qwertyuio', 'asdfghjk', 'xcvb', 3, '56785', 'sdfsghjfbvdcs', 'ccvbnfgerfs', 'dfsghgfnbdvsc', 'uploads/1744182157_IS 1115.pdf', 'uploads/1744182157_IS 1111 (1).pdf', '2025-04-09 07:02:37'),
+(12, 230, 'Oshadha', 'Weerakoon', 'oshadha.dw@gmail.com', '12345678', '451/1 Pahala Eriyagama Peradeniya', 'kandy', '', 3, '', 'ewrfg', 'weqrfdb', 'eqwgfdb', 'uploads/1745431333_IS 1115.pdf', 'uploads/1745431333_IS 1113 (1).pdf', '2025-04-23 18:02:13'),
+(13, 230, 'Oshadha', 'Weerakoon', 'oshadha.dw@gmail.com', '12345', '451/1 Pahala Eriyagama Peradeniya', 'dsaf', 'efgh', 4, '12345678', 'sdf', 'sdac', 'wdsacz', 'uploads/1745463846_IS 1112.pdf', 'uploads/1745463846_IS 1112.pdf', '2025-04-24 03:04:06'),
+(14, 232, 'oshadha', 'weerakoon', 'Osha@gmail.com', '1234', '1345', 'ucsc', '13', 3, '1234', 'dwf', 'ew', 'we', 'uploads/1745484462_IS 1108 (2).pdf', 'uploads/1745484462_IS 2110 (2).pdf', '2025-04-24 08:47:42');
 
 -- --------------------------------------------------------
 
@@ -235,28 +306,10 @@ INSERT INTO `user` (`userid`, `full_name`, `email`, `password`, `address`, `phon
 (2, 'Jane Smith', 'jane@example.com', 'securepass', '456 Avenue, Town', '0987654321'),
 (3, 'Oshadha Weerakoon', 'oshadha.dw@gmail.com', '$2y$10$ZbRAVVBGeJnbDsTmgf90duerSVqNFi4ningi3MvcYf7RoNPH66L.G', '451/1 Pahala Eriyagama Peradeniya', NULL),
 (5, 'Oshadha Weerakoon', 'oshadha@gmail.com', '$2y$10$fr/6TKwQakGa5IlEfeicoexOLsxWdkhG91DySP02PWTh1GajFa/km', '451/1 Pahala Eriyagama Peradeniya', NULL),
-(8, 'Oshadha Weerakoon', 'oshadh@gmail.com', '1234', '451/1 Pahala Eriyagama Peradeniya', NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `field_req`
---
-
-CREATE TABLE `field_req` (
-  `field_id` int(11) NOT NULL AUTO_INCREMENT,
-  `field_name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `company` varchar(255) NOT NULL,
-  `branch` varchar(255) NOT NULL,
-  `reg_no` varchar(50) NOT NULL,
-  `date` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`field_id`),
-  FOREIGN KEY (`company`, `branch`, `reg_no`) REFERENCES `company` (`name`, `branch`, `reg_no`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-ALTER TABLE `field_req`
-ADD COLUMN `status` ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending';
+(8, 'Oshadha Weerakoon', 'oshadh@gmail.com', '1234', '451/1 Pahala Eriyagama Peradeniya', NULL),
+(9, 'oshadhanee', 'oshadhanee@gmail.com', '1234', 'asdfghjk', NULL),
+(10, 'tharusha', 'tharu@gmail.com', '12345', 'tharu', NULL),
+(12, 'Oshadha', 'Osha@gmail.com', '1234', '451/1 Pahala Eriyagama Peradeniya', NULL);
 
 --
 -- Indexes for dumped tables
@@ -276,6 +329,13 @@ ALTER TABLE `field`
   ADD UNIQUE KEY `field_name` (`field_name`);
 
 --
+-- Indexes for table `field_req`
+--
+ALTER TABLE `field_req`
+  ADD PRIMARY KEY (`field_id`),
+  ADD KEY `company` (`company`,`branch`,`reg_no`);
+
+--
 -- Indexes for table `job`
 --
 ALTER TABLE `job`
@@ -288,7 +348,7 @@ ALTER TABLE `job`
 --
 ALTER TABLE `job_applications`
   ADD PRIMARY KEY (`application_id`),
-  ADD CONSTRAINT `job_applications_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE CASCADE;
+  ADD KEY `fk_job_id` (`job_id`);
 
 --
 -- Indexes for table `user`
@@ -306,29 +366,41 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `field`
 --
 ALTER TABLE `field`
-  MODIFY `field_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `field_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+
+--
+-- AUTO_INCREMENT for table `field_req`
+--
+ALTER TABLE `field_req`
+  MODIFY `field_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `job`
 --
 ALTER TABLE `job`
-  MODIFY `job_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=216;
+  MODIFY `job_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=233;
 
 --
 -- AUTO_INCREMENT for table `job_applications`
 --
 ALTER TABLE `job_applications`
-  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `field_req`
+--
+ALTER TABLE `field_req`
+  ADD CONSTRAINT `field_req_ibfk_1` FOREIGN KEY (`company`,`branch`,`reg_no`) REFERENCES `company` (`name`, `branch`, `reg_no`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `job`
@@ -336,6 +408,12 @@ ALTER TABLE `user`
 ALTER TABLE `job`
   ADD CONSTRAINT `job_ibfk_1` FOREIGN KEY (`job_field`) REFERENCES `field` (`field_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `job_ibfk_2` FOREIGN KEY (`company_name`,`branch`,`reg_no`) REFERENCES `company` (`name`, `branch`, `reg_no`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `job_applications`
+--
+ALTER TABLE `job_applications`
+  ADD CONSTRAINT `fk_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

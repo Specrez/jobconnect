@@ -1,45 +1,59 @@
 <?php
 session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login/login.php");
-    exit();
+// Check if user is admin
+if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'admin') {
+    die("Unauthorized access - Admin only");
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
-    $request_id = $_POST['request_id'] ?? '';
-    $field_name = $_POST['field_name'] ?? '';
+    $request_id = intval($_POST['request_id'] ?? 0);
+    $field_name = trim($_POST['field_name'] ?? '');
 
     $conn = new mysqli("localhost", "root", "", "jobconnect");
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    if ($action === 'approve' && $request_id && $field_name) {
-        $field_name = $conn->real_escape_string($field_name);
+    // Start transaction
+    $conn->begin_transaction();
 
-        // Insert into the field table
-        $query = "INSERT INTO field (field_name) VALUES ('$field_name')";
-        if ($conn->query($query) === TRUE) {
-            // Update the status in the field_req table
-            $update_query = "UPDATE field_req SET status = 'approved' WHERE field_id = $request_id";
-            $conn->query($update_query);
-            echo "Field request approved and added to the system.";
-        } else {
-            echo "Error: " . $conn->error;
+    try {
+        if ($action === 'approve' && $field_name) {
+            $field_name = $conn->real_escape_string($field_name);
+            
+            // Check if field already exists
+            $check = $conn->query("SELECT field_id FROM field WHERE field_name = '$field_name'");
+            if ($check->num_rows > 0) {
+                throw new Exception("Field already exists");
+            }
+
+            // Insert new field
+            if (!$conn->query("INSERT INTO field (field_name) VALUES ('$field_name')")) {
+                throw new Exception("Failed to add field");
+            }
+
+            // Update request status
+            if (!$conn->query("UPDATE field_req SET status = 'approved' WHERE field_id = $request_id")) {
+                throw new Exception("Failed to update request status");
+            }
+
+            $conn->commit();
+            echo "Field request approved successfully";
+
+        } elseif ($action === 'reject') {
+            if (!$conn->query("UPDATE field_req SET status = 'rejected' WHERE field_id = $request_id")) {
+                throw new Exception("Failed to reject request");
+            }
+            
+            $conn->commit();
+            echo "Field request rejected successfully";
         }
-    } elseif ($action === 'reject' && $request_id) {
-        // Update the status in the field_req table
-        $update_query = "UPDATE field_req SET status = 'rejected' WHERE field_id = $request_id";
-        if ($conn->query($update_query) === TRUE) {
-            echo "Field request rejected.";
-        } else {
-            echo "Error: " . $conn->error;
-        }
-    } else {
-        echo "Invalid action or missing parameters.";
+
+    } catch (Exception $e) {
+        $conn->rollback();
+        die("Error: " . $e->getMessage());
     }
 
     $conn->close();
